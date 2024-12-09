@@ -1,6 +1,6 @@
 package app.repository;
 
-import app.entity.DraftTask;
+import app.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,10 +8,10 @@ import java.util.List;
 
 
 @Repository
-public interface TaskRepository extends JpaRepository<DraftTask, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<DraftTask> findAll();
+    List<Task> findAll();
 
     @Override
-    DraftTask getById(Long aLong);
+    Task getById(Long aLong); // TODO: to optional
 }

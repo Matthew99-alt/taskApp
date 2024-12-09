@@ -11,6 +11,9 @@ import java.util.List;
 @RequestMapping("/task")
 @RequiredArgsConstructor
 public class TaskController {
+    // todo: rename methods
+    // todo: add controller advice
+
     private final TaskService taskService;
 
     @GetMapping("/all")
@@ -19,7 +22,7 @@ public class TaskController {
     }
 
     @GetMapping("/one")
-    public TaskDTO getATask(@RequestParam("id") Long id){
+    public TaskDTO getATask(@RequestParam("id") Long id) {
         return taskService.findTaskById(id);
     }
 

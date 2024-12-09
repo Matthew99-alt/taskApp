@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TaskDTO {
+public class TaskDTO { // TODO: to record
 
     private Long id;
 

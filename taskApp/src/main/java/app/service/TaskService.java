@@ -25,7 +25,8 @@ public class TaskService {
     }
 
     public TaskDTO findTaskById(Long id){
-        return makeATaskDTO(new TaskDTO(), taskRepository.getById(id));
+        DraftTask task = taskRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return makeATaskDTO(new TaskDTO(), task);
     }
 
     private TaskDTO makeATaskDTO(TaskDTO taskDTO, DraftTask task) {
@@ -64,10 +65,5 @@ public class TaskService {
 
         taskRepository.save(makeATask(taskDTO, task));
         return taskDTO;
-    }
-
-    public TaskDTO findById(Long userId) {
-        DraftTask task = taskRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        return makeATaskDTO(new TaskDTO(), task);
     }
 }

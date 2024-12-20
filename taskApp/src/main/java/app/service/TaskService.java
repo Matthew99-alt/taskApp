@@ -1,57 +1,40 @@
 package app.service;
 
 import app.dto.TaskDTO;
-import app.entity.DraftTask;
+import app.entity.Task;
+import app.mapper.TaskMapper;
 import app.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+
     private final TaskRepository taskRepository;
 
+    private final TaskMapper taskMapper;
+
     public List<TaskDTO> findAllTasks() {
-        List<DraftTask> draftTaskEntities = taskRepository.findAll();
-        ArrayList<TaskDTO> taskDTOs = new ArrayList<>();
-        for (DraftTask task : draftTaskEntities) {
-            taskDTOs.add(makeATaskDTO(new TaskDTO(), task));
-        }
-        return taskDTOs;
+        List<Task> taskEntities = taskRepository.findAll();
+        return taskEntities.stream().map(taskMapper::makeATaskDTO).collect(Collectors.toList());
     }
 
-    public TaskDTO findTaskById(Long id){
-        DraftTask task = taskRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        return makeATaskDTO(new TaskDTO(), task);
-    }
-
-    private TaskDTO makeATaskDTO(TaskDTO taskDTO, DraftTask task) {
-        taskDTO.setId(task.getId());
-        taskDTO.setDescription(task.getDescription());
-        taskDTO.setTitle(task.getTitle());
-        taskDTO.setUserId(task.getUserId());
-
-        return taskDTO;
-    }
-
-    private DraftTask makeATask(TaskDTO taskDTO, DraftTask task) {
-        taskDTO.setId(task.getId());
-        task.setTitle(taskDTO.getTitle());
-        task.setDescription(taskDTO.getDescription());
-        task.setUserId(taskDTO.getUserId());
-
-        return task;
+    public TaskDTO findTaskById(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return taskMapper.makeATaskDTO(task);
     }
 
     public TaskDTO saveTask(TaskDTO taskDTO) {
-        DraftTask task = new DraftTask();
+        Task newTask = taskRepository.save(taskMapper.makeATask(taskDTO));
+        taskDTO.setId(newTask.getId());
 
-        taskRepository.save(makeATask(taskDTO, task));
-        taskDTO.setId(task.getId());
         return taskDTO;
     }
 
@@ -60,10 +43,9 @@ public class TaskService {
     }
 
     public TaskDTO editTask(TaskDTO taskDTO) {
-        DraftTask task = taskRepository.findById(taskDTO.getId()).orElseThrow(EntityNotFoundException::new);
+        Task task = taskMapper.makeATask(taskDTO);
         task.setId(taskDTO.getId());
-
-        taskRepository.save(makeATask(taskDTO, task));
+        taskRepository.save(task);
         return taskDTO;
     }
 }

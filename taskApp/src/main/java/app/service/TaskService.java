@@ -8,8 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +30,8 @@ public class TaskService {
     }
 
     public TaskDTO saveTask(TaskDTO taskDTO) {
-        Task newTask = taskRepository.save(taskMapper.makeATask(taskDTO));
-        taskDTO.setId(newTask.getId());
-
-        return taskDTO;
+        Task savedTask = taskRepository.save(taskMapper.makeATask(taskDTO));
+        return taskMapper.makeATaskDTO(savedTask);
     }
 
     public void deleteTask(Long id) {
@@ -44,7 +40,7 @@ public class TaskService {
 
     public TaskDTO editTask(TaskDTO taskDTO) {
         Task task = taskMapper.makeATask(taskDTO);
-        task.setId(taskDTO.getId());
+        task.setId(taskDTO.id());
         taskRepository.save(task);
         return taskDTO;
     }

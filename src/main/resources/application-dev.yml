@@ -1,0 +1,4 @@
+service:
+  permissions:
+    username: alex-develop
+    password: 9999-develop

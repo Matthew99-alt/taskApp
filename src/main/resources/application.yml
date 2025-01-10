@@ -8,3 +8,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+service:
+  permissions:
+    username: alex
+    password: 9999
+    roles:
+      - admin
+      - user
+      - teacher

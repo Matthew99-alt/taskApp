@@ -1,6 +1,7 @@
 package app.service;
 
 import app.config.PermissionsConfig;
+import app.properties.DatasourceProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -11,32 +12,21 @@ import org.springframework.stereotype.Service;
 @Profile("dev")
 @Service
 public class DevService implements CommandLineRunner {
-    //TODO: datasource собрать в свой класс пропертей, вывести так же в лог, как и с Value (учти профиль DEV для старта!)
-
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
-
-    @Value("${spring.datasource.password}")
-    private String password;
-
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
+    private final DatasourceProperties datasourceProperties;
 
     private final PermissionsConfig permissionsConfig;
 
-    public DevService(PermissionsConfig permissionsConfig) {
+    public DevService(DatasourceProperties datasourceProperties, PermissionsConfig permissionsConfig) {
+        this.datasourceProperties = datasourceProperties;
         this.permissionsConfig = permissionsConfig;
     }
 
     @Override
     public void run(String... args) {
-        log.info("DevService started with db url {}", dbUrl);
-        log.info("DevService started with db password {}", password);
-        log.info("DevService started with db username {}", username);
-        log.info("DevService started with db driver class name {}", driverClassName);
+        log.info("DevService started with db url {}", datasourceProperties.getUrl());
+        log.info("DevService started with db password {}", datasourceProperties.getPassword());
+        log.info("DevService started with db username {}", datasourceProperties.getUsername());
+        log.info("DevService started with db driver class name {}", datasourceProperties.getDriverClassName());
 
         log.info("Service permissions password {}", permissionsConfig.getPassword());
         log.info("Service permissions username {}", permissionsConfig.getUsername());
